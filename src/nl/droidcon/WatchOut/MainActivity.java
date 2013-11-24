@@ -1,22 +1,21 @@
 package nl.droidcon.WatchOut;
 
-import java.util.Locale;
-
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.xeiam.xchange.Exchange;
+import com.xeiam.xchange.ExchangeSpecification;
+import com.xeiam.xchange.btce.BTCEExchange;
+
+import java.util.Locale;
 
 public class MainActivity extends FragmentActivity {
 
@@ -35,11 +34,12 @@ public class MainActivity extends FragmentActivity {
      */
     ViewPager mViewPager;
 
+    Trader trader;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the app.
@@ -49,6 +49,7 @@ public class MainActivity extends FragmentActivity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        trader = new Trader();
     }
 
     @Override
@@ -57,8 +58,6 @@ public class MainActivity extends FragmentActivity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-    
-    
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
