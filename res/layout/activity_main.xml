@@ -45,6 +45,7 @@
             android:id="@+id/alarmButton"
             android:layout_alignParentRight="true"
             android:layout_alignBottom="@+id/orderbookButton"
+            android:onClick="alarmButtonPressed"
             android:layout_alignTop="@+id/orderbookButton"
             android:background="@drawable/ic_lock_idle_alarm"/>
     <Button android:layout_width="wrap_content"
