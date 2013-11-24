@@ -21,9 +21,9 @@ import java.nio.charset.Charset;
 
 public class AlertService extends IntentService{
 
-    private WatchOutApplication app;
+    //private WatchOutApplication app;
 
-    //private SharedPreferences preferences;
+    private SharedPreferences preferences;
     // SharedPreferences.Editor editor;
 
     public AlertService() {
@@ -38,45 +38,45 @@ public class AlertService extends IntentService{
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        //preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
         Log.d("AlertService", "handle intent");
-        app = (WatchOutApplication)getApplication();
+        //app = (WatchOutApplication)getApplication();
         //editor = preferences.edit();
 
         //double changeThreshold = Double.parseDouble(preferences.getString(WatchOutApplication.CHANGE_THRESHOLD, "0.1"));
         //int updateTime = preferences.getInt(WatchOutApplication.UPDATE_TIME, 10000);
-        double changeThreshold = app.getBtcChangeThreshold();
-        int updateTime = app.getUpdateTime();
+        double changeThreshold = Double.parseDouble(preferences.getString("deviation", "0.1"));
+        int updateTime = Integer.parseInt(preferences.getString("interval", "10000"));
 
-        app.setAlertServiceRunning(true);
+        //app.setAlertServiceRunning(true);
         double btcUsdNew = 0,
                 btcUsdLast = 0;
-
         while (true){
-            if (app.isStopService()){
-                Log.e("Service" , "stop");
-                app.setAlertServiceRunning(false);
-                stopSelf();
+            //if (app.isStopService()){
+              // Log.e("Service" , "stop");
+               // app.setAlertServiceRunning(false);
+               // stopSelf();
 
-            }
-            Log.e("Service" , "busy");
+           // }
             try {
                 btcUsdLast = btcUsdNew;
                 btcUsdNew = readBtcUsd();
 
                 if (btcUsdLast != 0 && btcUsdNew != 0){
                     double btcUsdChange = ((btcUsdNew - btcUsdLast) / btcUsdLast) * 100;
-                    if (btcUsdChange > (changeThreshold * -1) || btcUsdChange > changeThreshold){
-                            createNotification(btcUsdChange);
+                    if (/*btcUsdChange > (changeThreshold * -1) || */btcUsdChange > changeThreshold){
+                        Log.e("Service" , "create");
+                        createNotification(btcUsdChange);
                     }
                     else {
+                        Log.e("Service" , "cancel");
                         NotificationManager notificationManager =
                                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                         notificationManager.cancel(0);
                     }
                     Log.e("Service" , btcUsdChange + " " + changeThreshold);
                 }
-                Thread.sleep(updateTime);
+                Thread.sleep(updateTime * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -158,8 +158,8 @@ public class AlertService extends IntentService{
     @Override
     public void onDestroy(){
         try {
-            Log.d("TCPService", "AlertService stopped");
-            app.setAlertServiceRunning(false);
+            Log.d("AlertService", "AlertService stopped");
+            //app.setAlertServiceRunning(false);
         } finally {
             super.onDestroy();
         }

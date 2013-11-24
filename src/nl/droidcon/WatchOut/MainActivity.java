@@ -2,9 +2,12 @@ package nl.droidcon.WatchOut;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
@@ -24,6 +27,7 @@ import java.io.InputStreamReader;
 public class MainActivity extends Activity {
 
    private float last = -1;
+   private SharedPreferences preferences;
 
    @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +35,24 @@ public class MainActivity extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
         new RequestTask().execute("http://vps.bryantebeek.nl");
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        if (preferences.getBoolean("alarmEnabled", false)){
+            Log.d("main", "true");
+            Intent intent = new Intent(getApplicationContext(), nl.droidcon.WatchOut.services.AlertService.class);
+            startService(intent);
+        }
+        else {
+            Log.d("main", "false");
+            Intent intent = new Intent(getApplicationContext(), nl.droidcon.WatchOut.services.AlertService.class);
+            stopService(intent);
+        }
     }
 
     class RequestTask extends AsyncTask<String, String, String> {
