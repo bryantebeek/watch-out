@@ -26,6 +26,7 @@
             </intent-filter>
         </activity>
         <activity android:name="nl.droidcon.WatchOut.OrderbookActivity"></activity>
+        <activity android:name=".UserSettingsActivity"></activity>
         <service android:name="nl.droidcon.WatchOut.services.AlertService" android:enabled="true"/>
     </application>
 

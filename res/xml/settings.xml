@@ -2,10 +2,24 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="Alarms" >
+        <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="alarmEnabled"
+                android:summary="Check to enable alarm"
+                android:title="Alarm" >
+        </CheckBoxPreference>
         <EditTextPreference
-                android:title="Upper Alarm"
-                android:summary="Set the upper alarm"
-                android:key="prefUsername"/>
+                android:title="Deviation"
+                android:summary="Set the deviation percentage for notification"
+                android:defaultValue="5"
+                android:inputType="number"
+                android:key="deviation"/>
+        <EditTextPreference
+                android:title="Interval"
+                android:summary="Set the interval for the deviation check in minutes"
+                android:key="interval"
+                android:inputType="number"
+                android:defaultValue="30"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Others" >

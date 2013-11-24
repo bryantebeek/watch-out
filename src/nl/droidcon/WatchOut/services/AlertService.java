@@ -89,10 +89,10 @@ public class AlertService extends IntentService{
         String btcUsdString = String.format("%.2f", btcUsd);
         // build notification
         // the addAction re-use the same intent to keep the example short
-        Notification n  = new Notification.Builder(this)
+        /*Notification n  = new Notification.Builder(this)
                 .setContentTitle("Bitcoin/USD")
                 .setContentText(btcUsdString)
-                .setSmallIcon(R.drawable.ic_launcher).build();
+                .setSmallIcon(R.drawable.ic_launcher).build();*/
         //.setContentIntent(pIntent)
         //.setAutoCancel(true)
         //.addAction(R.drawable.icon, "Call", pIntent)
@@ -103,7 +103,7 @@ public class AlertService extends IntentService{
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0, n);
+        //notificationManager.notify(0, n);
     }
 
     private JSONObject readJsonFromUrl(String url){
