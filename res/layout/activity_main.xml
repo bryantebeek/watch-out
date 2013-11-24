@@ -1,7 +1,59 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".MainActivity">
 
-</LinearLayout>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bitcoin"
+            android:id="@+id/BitcoinHeader" android:layout_gravity="center_horizontal|top"
+            android:layout_centerHorizontal="true" android:layout_alignParentTop="true"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Current"
+            android:id="@+id/lastTV" android:layout_gravity="center" android:textStyle="bold"
+            android:textSize="40dp" android:layout_centerHorizontal="true" android:layout_alignParentTop="true"
+            android:layout_marginTop="38dp"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Low"
+            android:id="@+id/lowTV"
+            android:textSize="25dp"
+            android:paddingLeft="5px" android:layout_alignParentLeft="true" android:layout_below="@+id/lastTV"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="High"
+            android:id="@+id/highTV"
+            android:textSize="25dp"
+            android:paddingRight="5px" android:layout_alignParentRight="true" android:layout_below="@+id/lastTV"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/orderbookButton"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:onClick="launchOrderbook"
+            android:background="@drawable/ic_menu_account_list"/>
+    <Button android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/alarmButton"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/orderbookButton"
+            android:layout_alignTop="@+id/orderbookButton"
+            android:background="@drawable/ic_lock_idle_alarm"/>
+    <Button android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/syncButton"
+            android:layout_centerHorizontal="true"
+            android:layout_alignTop="@+id/orderbookButton"
+            android:layout_alignBottom="@+id/orderbookButton"
+            android:onClick="syncButton"
+            android:background="@drawable/ic_menu_refresh"/>
+</RelativeLayout>
+

@@ -2,8 +2,12 @@ package nl.droidcon.WatchOut;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
+import android.widget.TextView;
 import android.widget.Toast;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -19,14 +23,13 @@ import java.io.InputStreamReader;
 
 public class MainActivity extends Activity {
 
-    Trader trader;
+   private float last = -1;
 
-    @Override
+   @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
-
-//        trader = new Trader();
 
         new RequestTask().execute("http://vps.bryantebeek.nl");
     }
@@ -78,16 +81,66 @@ public class MainActivity extends Activity {
         try {
             JSONObject data = new JSONObject(response);
             JSONObject ticker = data.getJSONObject("ticker");
-            String averagePrice = ticker.getString("avg");
+            getAndSetValues(ticker);
 
-            Toast.makeText(this, averagePrice, Toast.LENGTH_LONG).show();
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        Toast.makeText(this, "Test toast", Toast.LENGTH_SHORT).show();
-
-        Intent intent = new Intent(getApplicationContext(), nl.droidcon.WatchOut.services.AlertService.class);
-        startService(intent);
+        //Intent intent = new Intent(getApplicationContext(), nl.droidcon.WatchOut.services.AlertService.class);
+        //startService(intent);
     }
+    
+    private void getAndSetValues(JSONObject ticker) throws JSONException {
+        //Bitcoin Average
+        int color = Color.BLACK;
+        String lastPrice = ticker.getString("last");
+        if(last == -1){
+            last = Float.parseFloat(lastPrice);
+        }
+        else{
+            float previous = last;
+            last =  Float.parseFloat(lastPrice);
+            if(previous < last){
+                //green
+                color = Color.GREEN;
+            }
+            else if(last == previous)   {
+                //black
+            }
+            else{
+                //red
+                color = Color.RED;
+            }
+        }
+        TextView lastTV = (TextView) findViewById(R.id.lastTV);
+        lastTV.setText("$" + lastPrice);
+        lastTV.setTextColor(color);
+
+
+        //Bitcoin Low
+        String lowPrice = ticker.getString("low");
+        float low = Float.parseFloat(lowPrice);
+        lowPrice = String.format("%.1f", low);
+        TextView lowTV = (TextView) findViewById(R.id.lowTV);
+        lowTV.setText("$" + lowPrice);
+        //Bitcoin High
+        String highPrice = ticker.getString("high");
+        float high = Float.parseFloat(highPrice);
+        highPrice = String.format("%.1f", high);
+        TextView highTV = (TextView) findViewById(R.id.highTV);
+        highTV.setText("$" + highPrice);
+
+    }
+
+    public void syncButton(View v){
+        new RequestTask().execute("http://vps.bryantebeek.nl");
+        Toast.makeText(this, "Refreshing...", Toast.LENGTH_SHORT).show();
+    }
+
+    public void launchOrderbook(View v){
+        Intent intent = new Intent(this, OrderbookActivity.class);
+        startActivity(intent);
+    }
+
 }
