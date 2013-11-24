@@ -3,7 +3,7 @@ package nl.droidcon.WatchOut;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.ArrayMap;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import org.apache.http.HttpEntity;
@@ -30,6 +30,7 @@ public class OrderbookActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_orderbook);
 
         asks = (ListView) findViewById(R.id.asks);
