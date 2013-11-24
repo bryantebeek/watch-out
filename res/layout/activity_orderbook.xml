@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity" >
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+
+        <TextView android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight=".5"
+                  android:text="Asks"
+                  android:textSize="20dp"
+                  android:padding="10dp" />
+
+        <TextView android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight=".5"
+                  android:text="Bids"
+                  android:textSize="20dp"
+                  android:padding="10dp" />
+
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="horizontal"
+                  android:padding="10dp">
+
+        <ListView android:layout_width="0dp"
+                  android:id="@+id/asks"
+                  android:layout_height="match_parent"
+                  android:layout_weight=".5"
+                  android:divider="@null"
+                  android:dividerHeight="0dp" />
+
+        <ListView android:layout_width="0dp"
+                  android:id="@+id/bids"
+                  android:layout_height="match_parent"
+                  android:layout_weight=".5"
+                  android:divider="@null"
+                  android:dividerHeight="0dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

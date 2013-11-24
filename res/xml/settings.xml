@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="Alarms" >
+        <EditTextPreference
+                android:title="Upper Alarm"
+                android:summary="Set the upper alarm"
+                android:key="prefUsername"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Others" >
+        <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="prefSendReport"
+                android:summary="test"
+                android:title="test" >
+        </CheckBoxPreference>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
