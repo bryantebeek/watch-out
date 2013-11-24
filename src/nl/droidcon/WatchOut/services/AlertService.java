@@ -2,6 +2,8 @@ package nl.droidcon.WatchOut.services;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -19,6 +21,11 @@ import java.nio.charset.Charset;
 
 public class AlertService extends IntentService{
 
+    private WatchOutApplication app;
+
+    //private SharedPreferences preferences;
+    // SharedPreferences.Editor editor;
+
     public AlertService() {
         super("AlertService");
     }
@@ -31,55 +38,64 @@ public class AlertService extends IntentService{
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        // Normally we would do some work here, like download a file.
-        // For our sample, we just sleep for 5 seconds.
+        //preferences = PreferenceManager.getDefaultSharedPreferences(this);
         Log.d("AlertService", "handle intent");
+        app = (WatchOutApplication)getApplication();
+        //editor = preferences.edit();
 
+        //double changeThreshold = Double.parseDouble(preferences.getString(WatchOutApplication.CHANGE_THRESHOLD, "0.1"));
+        //int updateTime = preferences.getInt(WatchOutApplication.UPDATE_TIME, 10000);
+        double changeThreshold = app.getBtcChangeThreshold();
+        int updateTime = app.getUpdateTime();
+
+        app.setAlertServiceRunning(true);
         double btcUsdNew = 0,
                 btcUsdLast = 0;
 
-        for (int i = 0; i < 10; i++){
+        while (true){
+            if (app.isStopService()){
+                Log.e("Service" , "stop");
+                app.setAlertServiceRunning(false);
+                stopSelf();
 
+            }
+            Log.e("Service" , "busy");
             try {
                 btcUsdLast = btcUsdNew;
                 btcUsdNew = readBtcUsd();
 
-                createNotification(btcUsdNew);
-                Thread.sleep(10000);
+                if (btcUsdLast != 0 && btcUsdNew != 0){
+                    double btcUsdChange = ((btcUsdNew - btcUsdLast) / btcUsdLast) * 100;
+                    if (btcUsdChange > (changeThreshold * -1) || btcUsdChange > changeThreshold){
+                            createNotification(btcUsdChange);
+                    }
+                    else {
+                        NotificationManager notificationManager =
+                                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                        notificationManager.cancel(0);
+                    }
+                    Log.e("Service" , btcUsdChange + " " + changeThreshold);
+                }
+                Thread.sleep(updateTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
 
-
-
-
-
-        /*Toast.makeText(getApplicationContext(),  "test", Toast.LENGTH_SHORT).show();
-        long endTime = System.currentTimeMillis() + 2*1000;
-        while (System.currentTimeMillis() < endTime) {
-                try {
-                    wait(endTime - System.currentTimeMillis());
-                    Toast.makeText(getApplicationContext(),  "test", Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-            }
-        }    */
         //stopSelf();
     }
 
     private double readBtcUsd(){
-        JSONObject jsonBtcUsd = readJsonFromUrl("https://btc-e.com/api/2/btc_usd/ticker");
+        JSONObject jsonBtcUsd = readJsonFromUrl("http://vps.bryantebeek.nl/");
         if (jsonBtcUsd != null){
             try {
                 jsonBtcUsd = jsonBtcUsd.getJSONObject("ticker");
-                return jsonBtcUsd.getDouble("sell");
+                return jsonBtcUsd.getDouble("last");
             } catch (JSONException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-
+                e.printStackTrace();
             }
         }
         return 0;
-            //System.out.printf("BTC/USD = %.3f\n", btcUsd);
     }
 
     private void createNotification(double btcUsd){
@@ -90,7 +106,7 @@ public class AlertService extends IntentService{
         // build notification
         // the addAction re-use the same intent to keep the example short
         Notification n  = new Notification.Builder(this)
-                .setContentTitle("Bitcoin/USD")
+                .setContentTitle(getString(R.string.text_btc_change))
                 .setContentText(btcUsdString)
                 .setSmallIcon(R.drawable.ic_launcher).build();
         //.setContentIntent(pIntent)
@@ -143,6 +159,7 @@ public class AlertService extends IntentService{
     public void onDestroy(){
         try {
             Log.d("TCPService", "AlertService stopped");
+            app.setAlertServiceRunning(false);
         } finally {
             super.onDestroy();
         }
