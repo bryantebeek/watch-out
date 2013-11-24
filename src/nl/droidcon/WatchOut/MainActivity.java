@@ -143,4 +143,9 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
+    public void alarmButtonPressed(View v){
+        Intent intent = new Intent(this, UserSettingsActivity.class);
+        startActivity(intent);
+    }
+
 }
